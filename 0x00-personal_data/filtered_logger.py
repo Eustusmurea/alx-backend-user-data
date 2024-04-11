@@ -5,16 +5,9 @@ from typing import List
 import logging
 import mysql.connector
 import os
-import csv
+import requests
 
-CSV_FILE = "user_data.csv"
-
-def read_csv():
-    """Read the user_data.csv file and return the headers."""
-    with open(CSV_FILE, "r") as file:
-        reader = csv.reader(file)
-        headers = next(reader)
-    return headers
+url="https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
@@ -36,6 +29,11 @@ class RedactingFormatter(logging.Formatter):
 
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
+def fetch_csv_data(url):
+    """Fetches CSV data from the given URL"""
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an exception for bad status codes
+    return StringIO(response.text)
 
 def get_db() -> mysql.connector.connection.MYSQLConnection:
     """ Connection to MySQL environment """
