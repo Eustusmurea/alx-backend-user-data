@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Task 0 regex-ing"""
 import re
+from io import StringIO
 from typing import List
 import logging
 import mysql.connector
 import os
 import requests
+from mysql.connector.abstracts import MySQLConnectionAbstract
+from mysql.connector.pooling import PooledMySQLConnection
 
-url="https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
+url = "https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
+
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
@@ -29,13 +33,15 @@ class RedactingFormatter(logging.Formatter):
 
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
+
 def fetch_csv_data(url):
     """Fetches CSV data from the given URL"""
     response = requests.get(url)
     response.raise_for_status()  # Raise an exception for bad status codes
     return StringIO(response.text)
 
-def get_db() -> mysql.connector.connection.MYSQLConnection:
+
+def get_db() -> PooledMySQLConnection | MySQLConnectionAbstract:
     """ Connection to MySQL environment """
     db_connect = mysql.connector.connect(
         user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
