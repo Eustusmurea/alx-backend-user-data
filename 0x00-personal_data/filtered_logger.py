@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
-"""Task 0 regex-ing"""
+""" Use of regex in replacing occurrences of certain field values """
 import re
-from io import StringIO
 from typing import List
 import logging
 import mysql.connector
-from mysql.connector.connection import MySQLConnection
 import os
-import requests
-
-
-from mysql.connector.abstracts import MySQLConnectionAbstract
-from mysql.connector.pooling import PooledMySQLConnection
-
-url = "https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
 
 
 class RedactingFormatter(logging.Formatter):
@@ -37,28 +28,7 @@ class RedactingFormatter(logging.Formatter):
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
 
-def fetch_csv_data(url):
-    """Fetches CSV data from the given URL"""
-    response = requests.get(url)
-    response.raise_for_status()  # Raise an exception for bad status codes
-    return StringIO(response.text)
-
-
-def get_db() -> Optional[MySQLConnection]:
-    """ Connects to the MySQL environment """
-    try:
-        db_connect = mysql.connector.connect(
-            user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
-            password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
-            host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
-            database=os.getenv('PERSONAL_DATA_DB_NAME')
-        )
-        return db_connect
-    except mysql.connector.Error as err:
-        print("Error connecting to the database:", err)
-        return None
-    
-def get_db() -> PooledMySQLConnection | MySQLConnectionAbstract:
+def get_db() -> mysql.connector.connection.MYSQLConnection:
     """ Connection to MySQL environment """
     db_connect = mysql.connector.connect(
         user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
@@ -118,3 +88,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+    
