@@ -8,14 +8,12 @@ import mysql.connector
 from mysql.connector.connection import MySQLConnection
 import os
 import requests
-<<<<<<< HEAD
-import Optional
-=======
+
+
 from mysql.connector.abstracts import MySQLConnectionAbstract
 from mysql.connector.pooling import PooledMySQLConnection
 
 url = "https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
->>>>>>> 17071678dd340700f3621c3f15eff52e672a2407
 
 
 class RedactingFormatter(logging.Formatter):
@@ -46,7 +44,6 @@ def fetch_csv_data(url):
     return StringIO(response.text)
 
 
-<<<<<<< HEAD
 def get_db() -> Optional[MySQLConnection]:
     """ Connects to the MySQL environment """
     try:
@@ -60,7 +57,7 @@ def get_db() -> Optional[MySQLConnection]:
     except mysql.connector.Error as err:
         print("Error connecting to the database:", err)
         return None
-=======
+    
 def get_db() -> PooledMySQLConnection | MySQLConnectionAbstract:
     """ Connection to MySQL environment """
     db_connect = mysql.connector.connect(
@@ -70,7 +67,6 @@ def get_db() -> PooledMySQLConnection | MySQLConnectionAbstract:
         database=os.getenv('PERSONAL_DATA_DB_NAME')
     )
     return db_connect
->>>>>>> 17071678dd340700f3621c3f15eff52e672a2407
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
