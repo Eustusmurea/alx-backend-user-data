@@ -4,8 +4,10 @@ import re
 from typing import List
 import logging
 import mysql.connector
+from mysql.connector.connection import MySQLConnection
 import os
 import requests
+import Optional
 
 url="https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
 
@@ -35,15 +37,20 @@ def fetch_csv_data(url):
     response.raise_for_status()  # Raise an exception for bad status codes
     return StringIO(response.text)
 
-def get_db() -> mysql.connector.connection.MYSQLConnection:
-    """ Connection to MySQL environment """
-    db_connect = mysql.connector.connect(
-        user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
-        password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
-        host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
-        database=os.getenv('PERSONAL_DATA_DB_NAME')
-    )
-    return db_connect
+
+def get_db() -> Optional[MySQLConnection]:
+    """ Connects to the MySQL environment """
+    try:
+        db_connect = mysql.connector.connect(
+            user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
+            password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
+            host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
+            database=os.getenv('PERSONAL_DATA_DB_NAME')
+        )
+        return db_connect
+    except mysql.connector.Error as err:
+        print("Error connecting to the database:", err)
+        return None
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
