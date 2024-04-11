@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 """Task 0 regex-ing"""
 import re
+from io import StringIO
 from typing import List
 import logging
 import mysql.connector
 from mysql.connector.connection import MySQLConnection
 import os
 import requests
+<<<<<<< HEAD
 import Optional
+=======
+from mysql.connector.abstracts import MySQLConnectionAbstract
+from mysql.connector.pooling import PooledMySQLConnection
 
-url="https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
+url = "https://intranet.alxswe.com/rltoken/cVQXXtttuAobcFjYFKZTow"
+>>>>>>> 17071678dd340700f3621c3f15eff52e672a2407
+
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
@@ -31,6 +38,7 @@ class RedactingFormatter(logging.Formatter):
 
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
+
 def fetch_csv_data(url):
     """Fetches CSV data from the given URL"""
     response = requests.get(url)
@@ -38,6 +46,7 @@ def fetch_csv_data(url):
     return StringIO(response.text)
 
 
+<<<<<<< HEAD
 def get_db() -> Optional[MySQLConnection]:
     """ Connects to the MySQL environment """
     try:
@@ -51,6 +60,17 @@ def get_db() -> Optional[MySQLConnection]:
     except mysql.connector.Error as err:
         print("Error connecting to the database:", err)
         return None
+=======
+def get_db() -> PooledMySQLConnection | MySQLConnectionAbstract:
+    """ Connection to MySQL environment """
+    db_connect = mysql.connector.connect(
+        user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
+        password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
+        host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
+        database=os.getenv('PERSONAL_DATA_DB_NAME')
+    )
+    return db_connect
+>>>>>>> 17071678dd340700f3621c3f15eff52e672a2407
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
