@@ -5,7 +5,16 @@ from typing import List
 import logging
 import mysql.connector
 import os
+import csv
 
+CSV_FILE = "user_data.csv"
+
+def read_csv():
+    """Read the user_data.csv file and return the headers."""
+    with open(CSV_FILE, "r") as file:
+        reader = csv.reader(file)
+        headers = next(reader)
+    return headers
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
